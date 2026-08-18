@@ -27,7 +27,7 @@ def average_word_length(words):
 
 def top_words(words, n):
     counts = Counter(words)
-    most_common = sorted(counts.items())[:n]
+    most_common = sorted(counts.items(), key=lambda item: (-item[1], item[0]))[:n]
     return most_common
 
 

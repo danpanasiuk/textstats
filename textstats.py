@@ -21,6 +21,8 @@ def tokenize(text):
 
 
 def average_word_length(words):
+    if not words:
+        return 0.0
     total_chars = sum(len(w) for w in words)
     return total_chars / len(words)
 

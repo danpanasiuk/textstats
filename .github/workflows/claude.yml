@@ -30,4 +30,5 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           show_full_output: true
           claude_args: |
-            --allowedTools "Bash(gh pr create:*),Bash(python -m pytest:*),Bash(python3 -m pytest:*),Bash(pytest:*)"
+            --allowedTools "Bash(gh pr create:*),Bash(pip install:*),Bash(pip3 install:*),Bash(python -m pip install:*),Bash(python3 -m pip install:*),Bash(python -m pytest:*),Bash(python3 -m pytest:*),Bash(pytest:*)"
+            --append-system-prompt "You have gh CLI access authenticated via GH_TOKEN, and Bash permission for gh pr create. After pushing your fix branch, actually run gh pr create yourself (base main, head your branch) instead of only posting a compare link. Also install pytest with pip if it's missing before running the test suite, instead of skipping tests."

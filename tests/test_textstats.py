@@ -116,6 +116,29 @@ def test_json_flag_negative_top_returns_no_words(sample_file):
     assert data["top_words"] == []
 
 
+def test_multiple_files_combines_stats(tmp_path):
+    """Stats should be computed across the combined text of all given files."""
+    first = tmp_path / "first.txt"
+    second = tmp_path / "second.txt"
+    first.write_text("the quick brown fox")
+    second.write_text("the lazy dog the fox")
+    result = run_cli([str(first), str(second), "-n", "1"])
+    assert "Total words: 9" in result.stdout
+    assert "the: 3" in result.stdout
+
+
+def test_multiple_files_json_combines_stats(tmp_path):
+    """--json with multiple files should reflect the combined stats too."""
+    first = tmp_path / "first.txt"
+    second = tmp_path / "second.txt"
+    first.write_text("the quick brown fox")
+    second.write_text("the lazy dog the fox")
+    result = run_cli([str(first), str(second), "--json", "-n", "1"])
+    data = json.loads(result.stdout)
+    assert data["total_words"] == 9
+    assert data["top_words"] == [{"word": "the", "count": 3}]
+
+
 def test_default_output_unchanged_without_json_flag(sample_file):
     """Without --json, output should remain the human-readable text format."""
     result = run_cli([str(sample_file), "-n", "1"])

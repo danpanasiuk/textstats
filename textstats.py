@@ -35,16 +35,30 @@ def top_words(words, n):
     return most_common
 
 
+def filter_by_length(words, min_length):
+    if min_length <= 0:
+        return words
+    return [w for w in words if len(w) >= min_length]
+
+
 def main():
     parser = argparse.ArgumentParser(description="Basic text statistics")
     parser.add_argument("file", help="Path to a text file")
     parser.add_argument(
         "-n", "--top", type=int, default=5, help="Number of top words to show"
     )
+    parser.add_argument(
+        "-m",
+        "--min-length",
+        type=int,
+        default=5,
+        help="Exclude words shorter than this many characters (default: 5)",
+    )
     args = parser.parse_args()
 
     text = read_text(args.file)
     words = tokenize(text)
+    words = filter_by_length(words, args.min_length)
 
     print(f"Total words: {len(words)}")
     print(f"Unique words: {len(set(words))}")

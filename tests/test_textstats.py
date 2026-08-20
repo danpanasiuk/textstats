@@ -33,7 +33,7 @@ def sample_file(tmp_path):
 
 def test_top_words_orders_by_frequency(sample_file):
     """The most frequent word ('the', count 3) should be listed first."""
-    result = run_cli([str(sample_file), "-n", "1"])
+    result = run_cli([str(sample_file), "-n", "1", "--min-length", "0"])
     assert "the: 3" in result.stdout
 
 
@@ -51,3 +51,15 @@ def test_negative_top_returns_no_words(sample_file):
     result = run_cli([str(sample_file), "-n", "-1"])
     lines_after_header = result.stdout.split("words:")[-1].strip()
     assert lines_after_header == ""
+
+
+def test_min_length_filters_short_words(sample_file):
+    """--min-length should exclude shorter words from all stats."""
+    result = run_cli([str(sample_file), "--min-length", "4"])
+    assert "Total words: 6" in result.stdout
+
+
+def test_min_length_default_is_five(sample_file):
+    """With no --min-length given, words shorter than 5 chars are excluded by default."""
+    result = run_cli([str(sample_file)])
+    assert "Total words: 3" in result.stdout

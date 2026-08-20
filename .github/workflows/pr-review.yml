@@ -26,3 +26,5 @@ jobs:
             PR NUMBER: ${{ github.event.pull_request.number }}
 
             /pr-review
+          claude_args: |
+            --allowedTools "Skill"

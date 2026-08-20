@@ -25,3 +25,5 @@ jobs:
             REPO: ${{ github.repository }}
 
             /repo-health
+          claude_args: |
+            --allowedTools "Skill"

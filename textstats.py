@@ -70,7 +70,7 @@ def main():
         stats = {
             "total_words": len(words),
             "unique_words": len(set(words)),
-            "average_word_length": average_word_length(words),
+            "average_word_length": round(average_word_length(words), 2),
             "top_words": [{"word": word, "count": count} for word, count in top],
         }
         print(json.dumps(stats))

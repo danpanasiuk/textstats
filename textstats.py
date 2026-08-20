@@ -20,6 +20,12 @@ def tokenize(text):
     return re.findall(r"[A-Za-z']+", text.lower())
 
 
+def filter_by_length(words, min_length):
+    if min_length <= 0:
+        return words
+    return [w for w in words if len(w) >= min_length]
+
+
 def average_word_length(words):
     if not words:
         return 0.0
@@ -41,10 +47,17 @@ def main():
     parser.add_argument(
         "-n", "--top", type=int, default=5, help="Number of top words to show"
     )
+    parser.add_argument(
+        "-m",
+        "--min-length",
+        type=int,
+        default=0,
+        help="Exclude words shorter than this many characters from all stats",
+    )
     args = parser.parse_args()
 
     text = read_text(args.file)
-    words = tokenize(text)
+    words = filter_by_length(tokenize(text), args.min_length)
 
     print(f"Total words: {len(words)}")
     print(f"Unique words: {len(set(words))}")

@@ -51,3 +51,21 @@ def test_negative_top_returns_no_words(sample_file):
     result = run_cli([str(sample_file), "-n", "-1"])
     lines_after_header = result.stdout.split("words:")[-1].strip()
     assert lines_after_header == ""
+
+
+def test_min_length_filters_short_words(sample_file):
+    """--min-length should exclude short words from all stats, not just top words."""
+    result = run_cli([str(sample_file), "--min-length", "4", "-n", "5"])
+    # "the" (x3) and "fox" (x2) are shorter than 4 chars and must be excluded entirely.
+    assert "the:" not in result.stdout
+    assert "fox:" not in result.stdout
+    assert "quick: 1" in result.stdout
+    assert "Total words: 6" in result.stdout
+    assert "Unique words: 6" in result.stdout
+
+
+def test_min_length_default_does_not_filter(sample_file):
+    """With no --min-length, behavior should be unchanged (no filtering)."""
+    result = run_cli([str(sample_file), "-n", "1"])
+    assert "the: 3" in result.stdout
+    assert "Total words: 12" in result.stdout

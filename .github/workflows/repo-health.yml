@@ -21,6 +21,28 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           show_full_output: true
+          prompt: |
+            REPO: ${{ github.repository }}
+
+            Run a nightly repo health check:
+
+            1. Install pytest with pip if it's missing, then run the test
+               suite (`pytest -q`) and note pass/fail counts.
+            2. Check for stale or long-open issues and PRs via
+               `gh issue list` and `gh pr list`.
+            3. Search for an existing OPEN issue titled exactly
+               "Repo Health Report" via
+               `gh issue list --search "Repo Health Report in:title" --state open`.
+               If one exists, post your findings as a new comment on it via
+               `gh issue comment`. If none exists, create one via
+               `gh issue create` titled "Repo Health Report" with your
+               findings as the body.
+
+            Always summarize: test results, stale issues/PRs worth
+            attention, and any other notable repo health signals.
+
+            You are strictly read/report-only: never push commits, never
+            open or modify pull requests, never edit files.
+
           claude_args: |
             --allowedTools "Bash(pip install:*),Bash(pip3 install:*),Bash(python -m pip install:*),Bash(python3 -m pip install:*),Bash(python -m pytest:*),Bash(python3 -m pytest:*),Bash(pytest:*),Bash(gh issue list:*),Bash(gh issue view:*),Bash(gh issue edit:*),Bash(gh issue create:*),Bash(gh issue comment:*),Bash(gh pr list:*)"
-            --append-system-prompt "Run a nightly repo health check. Install pytest with pip if it's missing, then run the test suite (pytest -q) and note pass/fail counts. Check for stale or long-open issues and PRs via 'gh issue list' and 'gh pr list'. Search for an existing OPEN issue titled exactly 'Repo Health Report' via 'gh issue list --search \"Repo Health Report in:title\" --state open'. If one exists, post your findings as a new comment on it via 'gh issue comment'. If none exists, create one via 'gh issue create' titled 'Repo Health Report' with your findings as the body. Always summarize: test results, stale issues/PRs worth attention, and any other notable repo health signals. You are strictly read/report-only: never push commits, never open or modify pull requests, never edit files."

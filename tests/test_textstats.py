@@ -109,6 +109,13 @@ def test_json_flag_empty_file_does_not_crash(tmp_path):
     assert data["top_words"] == []
 
 
+def test_json_flag_negative_top_returns_no_words(sample_file):
+    """--json with a negative --top should mirror the text path: no top words."""
+    result = run_cli([str(sample_file), "--json", "--top", "-1"])
+    data = json.loads(result.stdout)
+    assert data["top_words"] == []
+
+
 def test_default_output_unchanged_without_json_flag(sample_file):
     """Without --json, output should remain the human-readable text format."""
     result = run_cli([str(sample_file), "-n", "1"])

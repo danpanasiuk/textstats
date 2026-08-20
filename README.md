@@ -7,6 +7,7 @@ word length, top N most frequent words) about a text file.
 python textstats.py sample.txt
 python textstats.py sample.txt --top 3
 python textstats.py sample.txt --min-length 4
+python textstats.py sample.txt --json
 ```
 
 This repo doubles as a **practice ground for the Claude Code GitHub Actions

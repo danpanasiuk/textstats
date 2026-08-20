@@ -1,0 +1,25 @@
+name: Claude PR Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          show_full_output: true
+          claude_args: |
+            --allowedTools "Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr review:*),Bash(gh pr comment:*)"
+            --append-system-prompt "Review this pull request's diff for correctness bugs, missing/weak test coverage, and style consistency with the rest of textstats.py. Submit your findings as a single formal GitHub PR review via 'gh pr review' (approve, comment, or request-changes as appropriate) with inline comments on specific lines where relevant, not just one summary blob. You are strictly read/comment-only: never push commits, never open a new PR, never edit files. If the PR looks correct and well-tested, approve it with a short note saying so."

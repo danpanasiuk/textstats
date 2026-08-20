@@ -62,6 +62,12 @@ root — read that for the authoritative task list.
 
 Same `anthropics/claude-code-action@v1` action, new trigger + prompt, as
 additional `.github/workflows/*.yml` files:
-- Always-on PR review (`pull_request` trigger)
-- Issue triage/labeling (`issues: [opened]` trigger)
-- Scheduled report (`schedule`/cron trigger)
+- [x] Always-on PR review — `.github/workflows/pr-review.yml`, triggers on
+      `pull_request: [opened, synchronize, reopened]`, comment-only
+      permissions (no `contents: write`), posts a formal `gh pr review`
+      with inline comments. Not yet pushed/tested against a real PR.
+- [ ] Issue triage/labeling (`issues: [opened]` trigger)
+- [x] Scheduled report — `.github/workflows/repo-health.yml`, cron
+      `0 6 * * *` (06:00 UTC) plus `workflow_dispatch` for manual runs;
+      runs pytest, checks stale issues/PRs, creates or updates a single
+      pinned `Repo Health Report` issue. Not yet pushed/tested.

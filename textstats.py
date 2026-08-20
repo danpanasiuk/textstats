@@ -7,6 +7,7 @@ Usage:
 """
 
 import argparse
+import json
 import re
 from collections import Counter
 
@@ -54,16 +55,32 @@ def main():
         default=0,
         help="Exclude words shorter than this many characters from all stats",
     )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Print stats as a single JSON object instead of human-readable lines",
+    )
     args = parser.parse_args()
 
     text = read_text(args.file)
     words = filter_by_length(tokenize(text), args.min_length)
+    top = top_words(words, args.top)
+
+    if args.json:
+        stats = {
+            "total_words": len(words),
+            "unique_words": len(set(words)),
+            "average_word_length": round(average_word_length(words), 2),
+            "top_words": [{"word": word, "count": count} for word, count in top],
+        }
+        print(json.dumps(stats))
+        return
 
     print(f"Total words: {len(words)}")
     print(f"Unique words: {len(set(words))}")
     print(f"Average word length: {average_word_length(words):.2f}")
     print(f"Top {args.top} words:")
-    for word, count in top_words(words, args.top):
+    for word, count in top:
         print(f"  {word}: {count}")
 
 

@@ -4,6 +4,7 @@
 Usage:
     python textstats.py sample.txt
     python textstats.py sample.txt --top 3
+    python textstats.py sample.txt sample2.txt
 """
 
 import argparse
@@ -44,7 +45,9 @@ def top_words(words, n):
 
 def main():
     parser = argparse.ArgumentParser(description="Basic text statistics")
-    parser.add_argument("file", help="Path to a text file")
+    parser.add_argument(
+        "files", nargs="+", help="Path to one or more text files"
+    )
     parser.add_argument(
         "-n", "--top", type=int, default=5, help="Number of top words to show"
     )
@@ -62,7 +65,7 @@ def main():
     )
     args = parser.parse_args()
 
-    text = read_text(args.file)
+    text = "\n".join(read_text(path) for path in args.files)
     words = filter_by_length(tokenize(text), args.min_length)
     top = top_words(words, args.top)
 
